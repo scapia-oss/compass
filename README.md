@@ -230,8 +230,77 @@ A: Yes. Each repo gets its own steering and specs. For changes that span repos, 
 **Q: How does the plugin update?**
 A: The release workflow rebuilds the plugin on every merge to `main` and publishes to the `release` branch. Run `/plugin marketplace update kiro-compass` then `/plugin install kiro@kiro-compass` to pull the latest.
 
+**Q: How does auto-learning work?**
+A: When you correct the AI during review or debug, the correction is recorded in the spec's `learnings.md`. If the pattern is reusable, it's promoted to a global `patterns.md` file. 19 of 24 skills load this file, so the AI applies learned patterns to future specs automatically. A feedback-capture hook also catches corrections made between skill runs. See [Auto-Learning](#auto-learning-how-compass-gets-smarter).
+
 **Q: Is the retrospective useful?**
 A: `/kiro:retrospective` produces two files: a developer journey interview (what worked, what didn't, friction points) and a skill improvement report (what the plugin should do better). It's optional but valuable — the feedback files are the primary signal for improving Compass itself.
+
+---
+
+## Auto-Learning: How Compass Gets Smarter
+
+Compass has a built-in learning loop. When the AI makes a mistake and you correct it — wrong design choice, missed constraint, bad architectural call — that correction doesn't vanish when the session ends. It's recorded, promoted, and loaded into future work.
+
+```
+┌──────────────────────────────────────────────────────┐
+│              YOU CORRECT THE AI                       │
+│  (approach, scope, architecture, technical choice)   │
+└──────┬──────────────────┬─────────────────┬──────────┘
+       │                  │                 │
+       ▼                  ▼                 ▼
+ ┌───────────┐   ┌───────────────┐   ┌─────────────┐
+ │  In-skill │   │  Feedback     │   │  Retro-     │
+ │  capture  │   │  capture hook │   │  spective   │
+ │  (review/ │   │  (between     │   │             │
+ │   debug)  │   │   sessions)   │   │             │
+ └─────┬─────┘   └──────┬────────┘   └─────────────┘
+       │                 │
+       ▼                 ▼
+ ┌─────────────────────────────────┐
+ │  Per-spec learnings             │
+ │  .kiro/specs/.../learnings.md   │
+ │  (what went wrong, root cause,  │
+ │   correction, is it reusable?)  │
+ └──────────────┬──────────────────┘
+                │ generalizable?
+                ▼
+ ┌─────────────────────────────────┐
+ │  Global patterns                │
+ │  .kiro/learnings/patterns.md    │
+ │  (append-only, validated,       │
+ │   cited with back-pointers)     │
+ └──────────────┬──────────────────┘
+                │ loaded by 19 of 24 skills
+                ▼
+ ┌─────────────────────────────────┐
+ │  Next spec / design / impl      │
+ │  applies learned patterns       │
+ │  and cites them in decisions    │
+ └─────────────────────────────────┘
+```
+
+### Three ways corrections enter the system
+
+1. **In-skill capture.** During `/kiro:review` and `/kiro:debug`, if you override the AI's verdict — wrong design call, missed constraint, bad root cause — the skill records it to the spec's `learnings.md` immediately.
+
+2. **Feedback-capture hook.** Corrections often arrive *after* a skill finishes — you see the result, then tell the AI what was wrong. A background hook detects this and prompts the AI to record the correction, even though no skill is running.
+
+3. **Retrospective.** `/kiro:retrospective` runs a structured developer-journey interview — what worked, what didn't, where friction was — and produces both a feedback file and a skill-improvement report.
+
+### From local to global
+
+Each correction lands in the spec's `learnings.md` first. If the pattern is generalizable (useful beyond this one spec), it gets promoted to `.kiro/learnings/patterns.md` — a global, **append-only** file. Patterns are never deleted or reordered; a validation script enforces this. Each pattern carries a back-pointer to the spec that discovered it.
+
+### How patterns influence future work
+
+19 of 24 skills load `patterns.md` as context — discovery, all spec phases, design, implementation, review, debug, and validation. When a loaded pattern affects a decision, the skill cites it:
+
+```
+Learning applied: .kiro/learnings/patterns.md:42 — P-3 "Batch inventory calls" → used batch API in cart pricing
+```
+
+The result: the AI doesn't repeat the same mistake twice in the same project. Patterns accumulate over weeks and sessions, building a project-specific knowledge base that every future spec benefits from.
 
 ---
 
@@ -243,7 +312,7 @@ A: `/kiro:retrospective` produces two files: a developer journey interview (what
 - **Steering = project memory**: `.kiro/steering/` files persist across sessions. Every consuming skill loads all of them — no relevant context is silently dropped.
 - **Evidence over claims**: `/kiro:verify-completion` requires fresh build/test evidence before "done". Self-reported status is never trusted alone.
 - **Root-cause debugging**: `/kiro:debug` investigates before patching. It traces divergence between working and broken states, not guess-and-patch.
-- **Learnings are durable**: patterns, decisions, and feedback survive in files. The next session — or the next person — picks up where the last one left off.
+- **Auto-learning loop**: corrections are captured, promoted to global patterns, and loaded into future specs. The AI doesn't repeat the same mistake twice. See [Auto-Learning](#auto-learning-how-compass-gets-smarter).
 - **Deterministic build**: `npm run build:plugin` from the same source produces byte-identical output. The parity test enforces this in CI.
 - **Plugin is a derived artifact**: the `plugin/` directory is generated. Source of truth is always `tools/cc-sdd/templates/`. Hand-editing `plugin/` is never correct.
 
