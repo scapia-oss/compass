@@ -170,7 +170,7 @@ const pages = [
           <li><strong>LLD</strong> (Low-Level Design): interfaces, data models, API contracts, error handling. This only starts after HLD is approved.</li>
         </ul>
         <p>The split saves tokens (no detailed interface specs for an architecture that's going to change) and saves time (HLD review catches structural mistakes before you're deep in implementation details).</p>
-        <p>A ruthless <a href="#gates">architect-critique loop</a> stress-tests the HLD with pointed questions about edge cases, failure modes, and blast radius — grounded in your actual codebase, not generic advice.</p>
+        <p>A ruthless <a href="https://github.com/scapia-oss/compass/blob/main/tools/cc-sdd/templates/shared/settings/rules/architect-critique-loop.md">architect-critique loop</a> stress-tests the HLD with pointed questions about edge cases, failure modes, and blast radius — grounded in your actual codebase, not generic advice.</p>
         <div class="callout"><a href="#specifications">How specs work →</a> · Commands: <a href="#spec-design-hld"><code>/kiro:spec-design-hld</code></a>, <a href="#spec-design-lld"><code>/kiro:spec-design-lld</code></a></div>
       </section>
 
@@ -710,17 +710,94 @@ const pages = [
     content: `
       <section class="section">
         <h1>Gates</h1>
-        <p>Gates are not red tape. They are small moments where humans can correct direction before the agent compounds a bad assumption.</p>
-        <div class="grid two">
-          <div class="card"><h3>Requirements gate</h3><p>Approve the outcome and acceptance criteria.</p></div>
-          <div class="card"><h3>Design gate</h3><p>Approve the technical approach and blast radius.</p></div>
-          <div class="card"><h3>Tasks gate</h3><p>Approve the execution plan before code starts.</p></div>
-          <div class="card"><h3>Validation gate</h3><p>Confirm the final implementation matches the spec and evidence.</p></div>
+        <p>Gates are not red tape. They are small moments where humans can correct direction before the agent compounds a bad assumption. Each gate maps to a specific command and fires at a specific point in the lifecycle.</p>
+      </section>
+      <section class="section">
+        <h2>Gate Map</h2>
+        <table>
+          <thead><tr><th>Gate</th><th>When it fires</th><th>Command</th><th>What you approve</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Requirements</strong></td>
+              <td>After <code>/kiro:spec-requirements</code></td>
+              <td>Human reviews <code>requirements.md</code></td>
+              <td>Outcomes, acceptance criteria, boundaries. Are we building the right thing?</td>
+            </tr>
+            <tr>
+              <td><strong>Design (HLD)</strong></td>
+              <td>After <code>/kiro:spec-design-hld</code></td>
+              <td>Human reviews <code>design-hld.md</code></td>
+              <td>Architecture, component boundaries, data flows. Is the approach sound?</td>
+            </tr>
+            <tr>
+              <td><strong>Design (LLD)</strong></td>
+              <td>After <code>/kiro:spec-design-lld</code></td>
+              <td>Human reviews <code>design-lld.md</code></td>
+              <td>Interfaces, contracts, data models. Are the details right?</td>
+            </tr>
+            <tr>
+              <td><strong>Tasks</strong></td>
+              <td>After <code>/kiro:spec-tasks</code></td>
+              <td>Human reviews <code>tasks.md</code></td>
+              <td>Execution plan, ordering, boundaries per task. Can an engineer implement from this?</td>
+            </tr>
+            <tr>
+              <td><strong>Per-task review</strong></td>
+              <td>During <code>/kiro:impl</code> (after each task)</td>
+              <td><code>/kiro:review</code></td>
+              <td>Code matches spec boundaries, no security/correctness issues, scope not exceeded.</td>
+            </tr>
+            <tr>
+              <td><strong>Feature validation</strong></td>
+              <td>After all tasks complete</td>
+              <td><code>/kiro:validate-impl</code></td>
+              <td>Cross-task consistency, full test suite, acceptance criteria met end-to-end.</td>
+            </tr>
+            <tr>
+              <td><strong>Completion</strong></td>
+              <td>Before claiming "done"</td>
+              <td><code>/kiro:verify-completion</code></td>
+              <td>Fresh build/test evidence. Self-reported status is never trusted alone.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <section class="section">
+        <h2>Where Gates Sit in the Lifecycle</h2>
+        <div class="diagram">
+          <pre>
+  Discovery → Requirements → [GATE] → HLD → [GATE] → LLD → [GATE]
+     → Tasks → [GATE] → Implementation (per-task [REVIEW])
+     → Feature Validation → Completion [GATE] → Done
+          </pre>
+        </div>
+        <p>Each <code>[GATE]</code> is a human checkpoint. The workflow pauses and asks you to review and approve before proceeding. Skip a gate with <code>-y</code> when risk is low — but the artifact is still produced for anyone to review later.</p>
+      </section>
+      <section class="section">
+        <h2>Validation Commands</h2>
+        <div class="grid">
+          <div class="card">
+            <h3><code>/kiro:validate-design</code></h3>
+            <p>Interactive design quality review. Runs the <a href="https://github.com/scapia-oss/compass/blob/main/tools/cc-sdd/templates/shared/settings/rules/architect-critique-loop.md">architect-critique loop</a> — pointed questions about edge cases, failure modes, and blast radius. Use after HLD or LLD when you want a second opinion.</p>
+          </div>
+          <div class="card">
+            <h3><code>/kiro:validate-gap</code></h3>
+            <p>Analyzes the gap between requirements and the existing codebase. Useful when integrating with existing systems — finds what already exists, what's missing, and what conflicts.</p>
+          </div>
+          <div class="card">
+            <h3><code>/kiro:validate-impl</code></h3>
+            <p>Feature-level integration validation. Cross-checks all tasks together, runs the full test suite, and verifies acceptance criteria end-to-end. Use after all tasks complete.</p>
+          </div>
+          <div class="card">
+            <h3><code>/kiro:verify-completion</code></h3>
+            <p>Fresh-evidence gate. Requires actual build/test output — not self-reported status. Use before claiming a task is complete, a fix works, or a feature is ready.</p>
+          </div>
         </div>
       </section>
       <section class="section">
-        <h2>Fast Track Still Has A Gate</h2>
-        <p><code>--auto</code> and <code>/kiro:impl-fast</code> are useful when risk is low, but they should still leave enough artifact trail for someone else to understand what changed and why.</p>
+        <h2>Fast Track Still Has Gates</h2>
+        <p><code>/kiro:impl-fast</code> skips TDD and per-task review but still runs a build+test end gate and produces the same spec artifacts. The validation commands above work the same way — they check against the spec regardless of which implementation path was used.</p>
+        <p><code>--auto</code> fast-tracks approvals but still produces the artifact files. Someone can review them after the fact.</p>
       </section>
     `
   },
