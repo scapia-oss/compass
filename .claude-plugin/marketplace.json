@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "kiro-compass",
+  "description": "Kiro Compass marketplace for practical spec-driven development in Claude Code.",
+  "owner": {
+    "name": "Compass Maintainers"
+  },
+  "plugins": [
+    {
+      "name": "kiro",
+      "description": "Kiro workflow for Compass spec-driven development in Claude Code.",
+      "category": "development",
+      "source": "./plugin",
+      "homepage": "https://github.com/scapia-oss/compass"
+    }
+  ]
+}

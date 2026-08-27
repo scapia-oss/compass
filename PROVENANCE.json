@@ -1,0 +1,10 @@
+{
+  "public_repository": "scapia-oss/compass",
+  "source_branch": "main",
+  "source_commit": "2630b8b42b74bd98c91a008bc13236a2f373e4b5",
+  "workflow": "Validate and Publish Plugin",
+  "run_id": "33082857332",
+  "run_number": "6",
+  "run_attempt": "2",
+  "plugin_version": "0.6.2"
+}

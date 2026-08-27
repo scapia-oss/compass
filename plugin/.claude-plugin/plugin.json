@@ -1,0 +1,9 @@
+{
+  "name": "kiro",
+  "version": "0.6.2",
+  "description": "Kiro workflow for Compass spec-driven development in Claude Code.",
+  "author": {
+    "name": "Compass Maintainers"
+  },
+  "homepage": "https://github.com/compass-sdd/compass"
+}

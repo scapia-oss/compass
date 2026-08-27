@@ -1,0 +1,52 @@
+{
+  "feature_name": "{{FEATURE_NAME}}",
+  "spec_path": "{{SPEC_PATH}}",
+  "created_at": "{{TIMESTAMP}}",
+  "updated_at": "{{TIMESTAMP}}",
+  "language": "en",
+  "spec_type": "{{SPEC_TYPE}}",
+  "workflow": "{{WORKFLOW}}",
+  "implementation_mode": "standard",
+  "commit_policy": "per-task",
+  "required_gates": {
+    "design_review": true,
+    "impl_validation": true,
+    "retrospective": true
+  },
+  "contracts": [],
+  "critique_coverage": [],
+  "commands_fired": [],
+  "artifacts": {
+    "requirements": true,
+    "bugfix_analysis": false,
+    "design_hld": true,
+    "design_lld": true,
+    "research": false,
+    "qa_log": true,
+    "tasks": true
+  },
+  "phase": "initialized",
+  "approvals": {
+    "requirements": {
+      "generated": false,
+      "approved": false
+    },
+    "design": {
+      "generated": false,
+      "approved": false
+    },
+    "design_hld": {
+      "generated": false,
+      "approved": false
+    },
+    "design_lld": {
+      "generated": false,
+      "approved": false
+    },
+    "tasks": {
+      "generated": false,
+      "approved": false
+    }
+  },
+  "ready_for_implementation": false
+}

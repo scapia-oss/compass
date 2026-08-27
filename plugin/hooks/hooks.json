@@ -1,0 +1,35 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if command -v python3 >/dev/null 2>&1; then PY=python3; elif command -v python >/dev/null 2>&1; then PY=python; else exit 0; fi; exec \"$PY\" \"${CLAUDE_PLUGIN_ROOT}/scripts/session-init.py\""
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if command -v python3 >/dev/null 2>&1; then PY=python3; elif command -v python >/dev/null 2>&1; then PY=python; else exit 0; fi; exec \"$PY\" \"${CLAUDE_PLUGIN_ROOT}/scripts/git-guard.py\""
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if command -v python3 >/dev/null 2>&1; then PY=python3; elif command -v python >/dev/null 2>&1; then PY=python; else exit 0; fi; exec \"$PY\" \"${CLAUDE_PLUGIN_ROOT}/scripts/feedback-capture.py\""
+          }
+        ]
+      }
+    ]
+  }
+}
