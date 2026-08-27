@@ -8,7 +8,7 @@
 
 set -euo pipefail
 
-REPO="scapia/compass"
+REPO="scapia-oss/compass"
 APPLY=false
 
 if [[ "${1:-}" == "--apply" ]]; then

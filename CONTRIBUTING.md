@@ -65,7 +65,7 @@ Keep the subject line under 72 characters. Use the body for context when the "wh
 ### Setup
 
 ```bash
-git clone https://github.com/scapia/compass.git
+git clone https://github.com/scapia-oss/compass.git
 cd compass/tools/cc-sdd
 npm ci
 ```
@@ -141,9 +141,9 @@ Labels are applied by maintainers during triage. Common labels:
 
 ## Reporting issues
 
-- **Bugs**: use the [bug report template](https://github.com/scapia/compass/issues/new?template=bug_report.yml)
-- **Features**: use the [feature request template](https://github.com/scapia/compass/issues/new?template=feature_request.yml)
-- **Questions**: use the [question template](https://github.com/scapia/compass/issues/new?template=question.yml)
+- **Bugs**: use the [bug report template](https://github.com/scapia-oss/compass/issues/new?template=bug_report.yml)
+- **Features**: use the [feature request template](https://github.com/scapia-oss/compass/issues/new?template=feature_request.yml)
+- **Questions**: use the [question template](https://github.com/scapia-oss/compass/issues/new?template=question.yml)
 - **Security**: see [SECURITY.md](SECURITY.md) — do not report security issues in public issues
 
 ## Docs site (`gh-pages`)

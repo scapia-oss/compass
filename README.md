@@ -2,7 +2,7 @@
 
 **Spec-driven development for Claude Code.** Compass is a Claude Code plugin that gives your AI coding sessions a structured workflow — from idea to requirements, design, implementation, review, validation, and learning — with durable project memory that survives after the chat scrolls away.
 
-[Docs](https://scapia.github.io/compass/) · [Install](#install) · [Commands](#commands) · [Contributing](CONTRIBUTING.md)
+[Docs](https://scapia-oss.github.io/compass/) · [Install](#install) · [Commands](#commands) · [Contributing](CONTRIBUTING.md)
 
 ---
 
@@ -26,7 +26,7 @@ Everything lands in version-controlled files under `.kiro/` — specs, decisions
 Compass installs as a Claude Code plugin from a marketplace source. The `release` branch contains the generated plugin artifact; `main` contains the source.
 
 ```
-/plugin marketplace add scapia/compass@release
+/plugin marketplace add scapia-oss/compass@release
 /plugin install kiro@kiro-compass
 /reload-plugins
 /kiro:doctor
@@ -304,15 +304,43 @@ The result: the AI doesn't repeat the same mistake twice in the same project. Pa
 
 ---
 
-## Facts & Design Principles
+## What Sets Compass Apart
+
+### Learnings compound across specs and teammates
+
+When you correct an AI mistake — a wrong design choice, a missed constraint — Compass records it, promotes it to a global pattern, and loads it into every future spec. Your correction today helps the next feature, and the next engineer. See [Auto-Learning](#auto-learning-how-compass-gets-smarter).
+
+### Design splits into HLD and LLD
+
+High-level design (architecture, flows, component boundaries) comes first. You review and iterate at the HLD level — cheap in tokens, fast to course-correct. Low-level design (interfaces, data models, contracts) comes only after HLD is approved. No tokens wasted on detailed interface specs for an architecture that's going to change.
+
+### Discovery surfaces unknowns before you commit
+
+`/kiro:discovery` isn't a prompt rewriter. It's a deep codebase exploration and Q&A loop that finds the unknowns in your approach — what exists, what's adjacent, what breaks — before routing to the right workflow. The questions it asks are the ones you'd forget to ask yourself.
+
+### Triage decides spec depth, not you
+
+Engineers misjudge scope. A "quick fix" turns into a cross-cutting change; a "big feature" turns out to be a config tweak. Compass classifies automatically: no spec, minimal spec (one model turn), or full spec (requirements → design → tasks). Override when you want, but the default is evidence-based.
+
+### Validation gates catch drift before it ships
+
+AI implementations can be flaky — tests pass but the code doesn't match the spec, or a design assumption was silently dropped. Validation gates (`/kiro:validate-impl`, `/kiro:verify-completion`) require fresh build/test evidence and cross-check against the spec. Self-reported "done" is never trusted.
+
+### Idea to approved HLD in minutes
+
+From a rough idea, Compass can reach an approved high-level design faster than alternatives — discovery scopes the work, requirements capture intent, and the HLD architect-critique loop produces a reviewed architecture. All grounded in your actual codebase, not generic advice.
+
+### Every step tells you the next one
+
+Lost mid-workflow? `/kiro:next` reads your spec state and prints the exact next command. No memorizing the 24-command list, no guessing what phase you're in. The workflow is self-navigating.
+
+---
+
+## Design Principles
 
 - **24 skills**, each one step in the workflow. No monolith commands.
 - **3-phase approval**: Requirements → Design → Tasks. Each phase produces a durable file. Nothing is implicit.
-- **Adaptive depth**: `/kiro:spec-quick` auto-classifies — a one-line config change gets a minimal spec (one model turn, no ceremony); a cross-cutting feature gets full requirements → design → tasks.
 - **Steering = project memory**: `.kiro/steering/` files persist across sessions. Every consuming skill loads all of them — no relevant context is silently dropped.
-- **Evidence over claims**: `/kiro:verify-completion` requires fresh build/test evidence before "done". Self-reported status is never trusted alone.
-- **Root-cause debugging**: `/kiro:debug` investigates before patching. It traces divergence between working and broken states, not guess-and-patch.
-- **Auto-learning loop**: corrections are captured, promoted to global patterns, and loaded into future specs. The AI doesn't repeat the same mistake twice. See [Auto-Learning](#auto-learning-how-compass-gets-smarter).
 - **Deterministic build**: `npm run build:plugin` from the same source produces byte-identical output. The parity test enforces this in CI.
 - **Plugin is a derived artifact**: the `plugin/` directory is generated. Source of truth is always `tools/cc-sdd/templates/`. Hand-editing `plugin/` is never correct.
 
@@ -323,7 +351,7 @@ The result: the AI doesn't repeat the same mistake twice in the same project. Pa
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide: branch naming, commit conventions, PR checklist, and how the CI pipeline works.
 
 ```bash
-git clone https://github.com/scapia/compass.git
+git clone https://github.com/scapia-oss/compass.git
 cd compass/tools/cc-sdd
 npm ci
 npm run ci    # build + test

@@ -62,7 +62,7 @@ jobs:
           set -euo pipefail
           PUBLIC_REPOSITORY="${{ vars.PUBLIC_REPOSITORY }}"
           if [[ -z "$PUBLIC_REPOSITORY" ]]; then
-            PUBLIC_REPOSITORY="compass-sdd/compass"
+            PUBLIC_REPOSITORY="scapia-oss/compass"
           fi
           PUBLIC_HOMEPAGE="https://github.com/${PUBLIC_REPOSITORY}"
           RELEASE_DIR="${RUNNER_TEMP}/plugin-release"
