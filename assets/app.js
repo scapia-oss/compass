@@ -625,6 +625,110 @@ const pages = [
     `
   },
   {
+    group: "Learn Compass",
+    id: "learning-loop",
+    title: "Auto-Learning",
+    summary: "How corrections become patterns that prevent the same mistake twice.",
+    badges: ["Core", "Patterns"],
+    content: `
+      <section class="section">
+        <h1>Auto-Learning Loop</h1>
+        <p>When you correct the AI — wrong design choice, missed constraint, bad architectural call — Compass records the correction, promotes it to a reusable pattern, and loads it into future work. The AI doesn't repeat the same mistake twice in the same project.</p>
+      </section>
+      <section class="section">
+        <h2>How It Works</h2>
+        <div class="diagram">
+          <pre>
+┌──────────────────────────────────────────────┐
+│           YOU CORRECT THE AI                 │
+│  (approach / scope / architecture / choice)  │
+└──────┬──────────────────┬─────────────┬──────┘
+       │                  │             │
+       ▼                  ▼             ▼
+ ┌───────────┐   ┌──────────────┐  ┌────────────┐
+ │  In-skill │   │  Feedback    │  │  Retro-    │
+ │  capture  │   │  capture     │  │  spective  │
+ │  (review/ │   │  hook        │  │            │
+ │   debug)  │   │  (between    │  │            │
+ │           │   │   skills)    │  │            │
+ └─────┬─────┘   └──────┬───────┘  └────────────┘
+       │                 │
+       ▼                 ▼
+ ┌────────────────────────────────────┐
+ │  Per-spec learnings                │
+ │  .kiro/specs/.../learnings.md      │
+ │  AI output → correction            │
+ │  → root cause → is it reusable?    │
+ └──────────────┬─────────────────────┘
+                │ generalizable + not covered?
+                ▼
+ ┌────────────────────────────────────┐
+ │  Global patterns                   │
+ │  .kiro/learnings/patterns.md       │
+ │  append-only · validated · cited   │
+ └──────────────┬─────────────────────┘
+                │ loaded by 19 of 24 skills
+                ▼
+ ┌────────────────────────────────────┐
+ │  Next spec / design / impl         │
+ │  "Learning applied: P-3 → batch    │
+ │   inventory calls in cart pricing"  │
+ └────────────────────────────────────┘
+          </pre>
+        </div>
+      </section>
+      <section class="section">
+        <h2>Three Entry Points</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>In-skill capture</h3>
+            <p>During <code>/kiro:review</code> and <code>/kiro:debug</code>, if you override the AI's verdict — wrong design call, missed constraint, bad root cause — the skill records the correction to <code>learnings.md</code> immediately.</p>
+            <p>Only directional corrections are recorded (approach, scope, architecture). Typos and formatting fixes are filtered out.</p>
+          </div>
+          <div class="card">
+            <h3>Feedback-capture hook</h3>
+            <p>Corrections often arrive <em>after</em> a skill finishes — you see the result, then tell the AI what was wrong. A background hook detects this and prompts recording, even when no skill is active.</p>
+            <p>The hook is session-scoped and fail-open: on any uncertainty, it fires rather than risking a lost correction.</p>
+          </div>
+          <div class="card">
+            <h3>Retrospective</h3>
+            <p><code>/kiro:retrospective</code> runs a structured interview — what worked, what didn't, where friction was — producing a <code>feedback.md</code> (developer journey) and <code>skill-improvements.md</code> (plugin improvement backlog).</p>
+          </div>
+        </div>
+      </section>
+      <section class="section">
+        <h2>Per-Spec to Global</h2>
+        <p>Each correction lands in the spec's <code>learnings.md</code> first, with:</p>
+        <ul>
+          <li>What the AI produced</li>
+          <li>What you corrected</li>
+          <li>Root cause of the mistake</li>
+          <li>Whether it's generalizable or spec-specific</li>
+        </ul>
+        <p>If the pattern is reusable beyond this one spec, it's <strong>promoted</strong> to <code>.kiro/learnings/patterns.md</code> — a global, <strong>append-only</strong> file.</p>
+        <div class="callout">
+          <strong>Append-only contract:</strong> Patterns are never deleted, reordered, or renumbered. New patterns get the next <code>P-N</code> number. A validation script (<code>validate-patterns-append-only.py</code>) enforces this against the base branch. Each pattern carries a back-pointer to the spec that discovered it.
+        </div>
+      </section>
+      <section class="section">
+        <h2>How Patterns Influence Future Work</h2>
+        <p>19 of 24 skills load <code>patterns.md</code> as context — discovery, all spec phases, design, implementation, review, debug, and validation. When a loaded pattern affects a decision, the skill cites it:</p>
+        <pre><code>Learning applied: .kiro/learnings/patterns.md:42 — P-3 "Batch inventory calls" → used batch API in cart pricing</code></pre>
+        <p>Over weeks and sessions, patterns accumulate into a project-specific knowledge base. Every new spec benefits from every past correction — even corrections made by different team members in different sessions.</p>
+      </section>
+      <section class="section">
+        <h2>Example Flow</h2>
+        <ol>
+          <li><strong>Session 1:</strong> During <code>/kiro:review</code>, you correct the AI: "Don't use fire-and-forget for message delivery — downstream providers can fail silently. Use a DLQ with retry."</li>
+          <li>The correction is recorded in <code>learnings.md</code> with root cause: "AI assumed synchronous delivery was reliable."</li>
+          <li>The pattern is generalizable → promoted to <code>patterns.md</code> as <code>P-4: "Async delivery needs DLQ + retry"</code>.</li>
+          <li><strong>Session 2:</strong> A different feature touches email notifications. During <code>/kiro:spec-design</code>, the AI loads P-4 and designs with a retry queue from the start.</li>
+          <li>The design cites: <code>Learning applied: P-4 → designed retry queue for email delivery</code>.</li>
+        </ol>
+      </section>
+    `
+  },
+  {
     group: "Guides",
     id: "bugfix-debug-workflow",
     title: "Bugfix and Debug Workflow",
