@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Compass docs</title>
+    <meta name="description" content="Compass gives Claude Code a practical spec-driven development workflow.">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="assets/styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">C</span>
+        <span>
+          <strong>Compass</strong>
+          <small>Spec-driven development for Claude Code</small>
+        </span>
+      </div>
+      <nav class="topnav" aria-label="Primary">
+        <a href="#quick-install">Install</a>
+        <a href="#first-10-minutes">First run</a>
+        <a href="#command-chooser">Commands</a>
+        <a href="#troubleshooting">Troubleshooting</a>
+        <a href="https://github.com/scapia/compass">GitHub</a>
+      </nav>
+      <div class="top-actions">
+        <button class="menu-toggle" type="button" aria-expanded="false" data-menu-toggle>Menu</button>
+        <button class="theme-toggle" type="button" aria-label="Toggle theme" data-theme-toggle>Dark</button>
+      </div>
+    </header>
+
+    <div class="shell">
+      <aside class="sidebar" aria-label="Documentation">
+        <label class="search-label" for="nav-filter">Find a page</label>
+        <input id="nav-filter" class="nav-filter" type="search" placeholder="Search docs">
+        <nav id="sidebar-nav" class="sidebar-nav"></nav>
+      </aside>
+      <main id="content" class="content" tabindex="-1"></main>
+      <aside class="toc" aria-label="On this page">
+        <div class="toc-title">On this page</div>
+        <nav id="toc-nav"></nav>
+      </aside>
+    </div>
+
+    <script src="assets/app.js"></script>
+  </body>
+</html>
