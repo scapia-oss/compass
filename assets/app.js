@@ -41,18 +41,6 @@ const pages = [
         </div>
       </section>
       <section class="section">
-        <h2>What Sets Compass Apart</h2>
-        <div class="grid two">
-          <div class="card"><h3>Learnings compound</h3><p>When you correct the AI, the correction is recorded, promoted to a global pattern, and loaded into every future spec. Your fix today helps the next feature — and the next teammate. <a href="#learning-loop">How it works →</a></p></div>
-          <div class="card"><h3>Design splits into HLD and LLD</h3><p>High-level design (architecture, flows) comes first — cheap to iterate. Low-level design (interfaces, contracts) only after HLD is approved. No tokens wasted on detailed specs for an architecture that's going to change.</p></div>
-          <div class="card"><h3>Discovery surfaces unknowns</h3><p><code>/kiro:discovery</code> is a deep codebase exploration and Q&amp;A loop. It finds the unknowns in your approach — what exists, what's adjacent, what breaks — before routing to the right workflow.</p></div>
-          <div class="card"><h3>Triage decides depth</h3><p>Engineers misjudge scope. Compass classifies automatically: no spec, minimal spec (one model turn), or full spec. A "quick fix" that's actually cross-cutting gets the right treatment.</p></div>
-          <div class="card"><h3>Validation catches drift</h3><p>AI implementations can be flaky — tests pass but the code doesn't match the spec. Validation gates require fresh evidence and cross-check against the spec. Self-reported "done" is never trusted.</p></div>
-          <div class="card"><h3>Idea to HLD in minutes</h3><p>Discovery scopes the work, requirements capture intent, the architect-critique loop produces a reviewed HLD. All grounded in your actual codebase, not generic advice.</p></div>
-          <div class="card"><h3>Self-navigating workflow</h3><p><code>/kiro:next</code> reads your spec state and prints the exact next command. No memorizing the 24-command list. The workflow tells you where you are.</p></div>
-        </div>
-      </section>
-      <section class="section">
         <h2>The Core Loop</h2>
         <div class="flow">
           <div class="flow-step"><strong>1. Orient</strong><code>/kiro:doctor</code><br><code>/kiro:steering</code></div>
@@ -150,6 +138,106 @@ const pages = [
           <a class="button primary" href="#first-10-minutes">Start the first run</a>
           <a class="button" href="#steering">Learn steering</a>
           <a class="button" href="#command-chooser">Pick a command</a>
+        </div>
+      </section>
+    `
+  },
+  {
+    group: "Get Started",
+    id: "what-sets-compass-apart",
+    title: "What Sets Compass Apart",
+    summary: "Seven design choices that make Compass different from prompting raw or using generic AI workflows.",
+    badges: ["Core", "Why"],
+    content: `
+      <section class="section">
+        <h1>What Sets Compass Apart</h1>
+        <p>Most AI coding tools stop at "prompt → diff." Compass is built around a different thesis: the hard part isn't generating code — it's keeping intent, decisions, and lessons visible across sessions, teammates, and months of evolution. These seven design choices are what make it work.</p>
+      </section>
+
+      <section class="section">
+        <h2>1. Learnings Compound Across Specs and Teammates</h2>
+        <p>When you correct the AI — wrong design choice, missed constraint, bad architectural call — Compass doesn't just fix this session. It <strong>records</strong> the correction in the spec's <code>learnings.md</code>, and if the pattern is reusable, <strong>promotes</strong> it to a global <code>patterns.md</code> file.</p>
+        <p>19 of 24 skills load that file as context. So your correction today shapes how the AI designs, implements, and reviews the <em>next</em> feature — even if a different teammate runs it in a different session weeks later.</p>
+        <p>Three capture paths make sure nothing slips through: in-skill capture during <a href="#review">review</a> and <a href="#debug">debug</a>, a background hook that catches corrections between skill runs, and <a href="#retrospective">retrospective</a> interviews.</p>
+        <div class="callout"><a href="#learning-loop">Deep dive: Auto-Learning Loop →</a></div>
+      </section>
+
+      <section class="section">
+        <h2>2. Design Splits into HLD and LLD</h2>
+        <p>Most tools produce one design document. Compass splits it into two deliberate phases:</p>
+        <ul>
+          <li><strong>HLD</strong> (High-Level Design): architecture, component boundaries, data flows, integration points. This is where you and the AI argue about the <em>shape</em> of the solution. Cheap in tokens, fast to iterate, easy to course-correct.</li>
+          <li><strong>LLD</strong> (Low-Level Design): interfaces, data models, API contracts, error handling. This only starts after HLD is approved.</li>
+        </ul>
+        <p>The split saves tokens (no detailed interface specs for an architecture that's going to change) and saves time (HLD review catches structural mistakes before you're deep in implementation details).</p>
+        <p>A ruthless <a href="#gates">architect-critique loop</a> stress-tests the HLD with pointed questions about edge cases, failure modes, and blast radius — grounded in your actual codebase, not generic advice.</p>
+        <div class="callout"><a href="#specifications">How specs work →</a> · Commands: <a href="#spec-design-hld"><code>/kiro:spec-design-hld</code></a>, <a href="#spec-design-lld"><code>/kiro:spec-design-lld</code></a></div>
+      </section>
+
+      <section class="section">
+        <h2>3. Discovery Surfaces Unknowns Before You Commit</h2>
+        <p><a href="#discovery"><code>/kiro:discovery</code></a> is not a prompt rewriter. It runs a deep codebase exploration and Q&amp;A loop that finds the unknowns in your approach:</p>
+        <ul>
+          <li>What already exists that overlaps with what you're building?</li>
+          <li>What adjacent systems will your change touch?</li>
+          <li>What assumptions are you making that the code contradicts?</li>
+          <li>Is this actually one feature, or three?</li>
+        </ul>
+        <p>The questions it asks are the ones you'd forget to ask yourself. The output is a scoped brief that routes to the right workflow — no spec, quick spec, full spec, or multi-spec roadmap.</p>
+        <div class="callout"><a href="#discovery-brainstorm-qna">Discovery, Brainstorm, and Q&amp;A →</a></div>
+      </section>
+
+      <section class="section">
+        <h2>4. Triage Decides Spec Depth, Not You</h2>
+        <p>Engineers misjudge scope. A "quick fix" turns into a cross-cutting change; a "big feature" turns out to be a config tweak. Compass classifies automatically:</p>
+        <table>
+          <thead><tr><th>Classification</th><th>What happens</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td><strong>No spec</strong></td><td>Discovery routes to direct action</td><td>Typo fix, version bump</td></tr>
+            <tr><td><strong>Minimal spec</strong></td><td>One model turn, no design phase, no gates</td><td>Add a config flag, rename an endpoint</td></tr>
+            <tr><td><strong>Standard spec</strong></td><td>Requirements → Design (if warranted) → Tasks</td><td>New API endpoint, refactor a service</td></tr>
+            <tr><td><strong>Multi-spec</strong></td><td>Roadmap with dependency waves</td><td>Platform migration, new product vertical</td></tr>
+          </tbody>
+        </table>
+        <p>Override when you want, but the default is evidence-based. <a href="#command-chooser">The command chooser</a> walks you through the same logic interactively.</p>
+      </section>
+
+      <section class="section">
+        <h2>5. Validation Gates Catch Drift Before It Ships</h2>
+        <p>AI implementations can be flaky. Tests pass but the code doesn't match the spec. A design assumption gets silently dropped. A boundary stated in requirements is ignored in implementation.</p>
+        <p>Compass has three layers of validation:</p>
+        <ul>
+          <li><strong>Per-task review</strong> (<a href="#review"><code>/kiro:review</code></a>): checks each task against its spec boundaries and catches security, correctness, and scope issues.</li>
+          <li><strong>Feature-level validation</strong> (<a href="#validate-impl"><code>/kiro:validate-impl</code></a>): cross-checks all tasks together, runs the full test suite, verifies the spec's acceptance criteria end-to-end.</li>
+          <li><strong>Completion gate</strong> (<a href="#kiro-next"><code>/kiro:verify-completion</code></a>): requires fresh build/test evidence before "done." Self-reported status is never trusted alone.</li>
+        </ul>
+        <div class="callout"><a href="#gates">How gates work →</a></div>
+      </section>
+
+      <section class="section">
+        <h2>6. Idea to Approved HLD in Minutes</h2>
+        <p>The path from a rough idea to a reviewed, approved high-level design is short:</p>
+        <ol>
+          <li><strong>Discovery</strong> scopes the work — explores the codebase, asks questions, produces a brief.</li>
+          <li><strong>Requirements</strong> capture intent in <a href="#specifications">EARS format</a> — observable behaviors, not implementation instructions.</li>
+          <li><strong>HLD</strong> designs the architecture — the architect-critique loop stress-tests it with pointed questions grounded in your actual code.</li>
+        </ol>
+        <p>Each step is grounded in local evidence (<a href="#steering">steering</a> + codebase reads), not generic architecture advice. The result is an HLD your team can review in 5 minutes and an engineer can implement from.</p>
+      </section>
+
+      <section class="section">
+        <h2>7. Every Step Tells You the Next One</h2>
+        <p>24 commands sounds like a lot. In practice, you rarely think about them.</p>
+        <ul>
+          <li><a href="#discovery"><code>/kiro:discovery</code></a> routes you to the right starting point based on what you describe.</li>
+          <li><a href="#kiro-next"><code>/kiro:next</code></a> reads your spec state and prints the exact next command — which phase you're in, what's done, what's blocking.</li>
+          <li><a href="#spec-status"><code>/kiro:spec-status</code></a> gives the full picture when you need more detail.</li>
+        </ul>
+        <p>The workflow is self-navigating. Most sessions use 3–5 commands. You don't need to memorize the list.</p>
+        <div class="actions inline">
+          <a class="button primary" href="#quick-install">Install Compass</a>
+          <a class="button" href="#first-10-minutes">First 10 minutes</a>
+          <a class="button" href="#command-chooser">Which command should I run?</a>
         </div>
       </section>
     `
