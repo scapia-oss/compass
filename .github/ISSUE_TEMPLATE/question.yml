@@ -1,0 +1,19 @@
+name: Question
+description: Ask a question about using Compass or its workflow
+title: "[Question]: "
+labels: [question]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+      description: What would you like to know? Include context about what you're trying to accomplish.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: What have you tried?
+      description: Steps you've already taken or documentation you've already read.
+    validations:
+      required: false

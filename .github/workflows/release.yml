@@ -1,0 +1,134 @@
+name: Validate and Publish Plugin
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: plugin-release
+  cancel-in-progress: false
+
+jobs:
+  validate-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: tools/cc-sdd/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: tools/cc-sdd
+
+      - name: Compute release version
+        id: version
+        shell: bash
+        run: |
+          if [[ "${GITHUB_EVENT_NAME}" == "push" ]]; then
+            VERSION="0.${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}"
+          else
+            VERSION="0.0.0"
+          fi
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Apply release version
+        shell: bash
+        run: |
+          npm version "${{ steps.version.outputs.version }}" --no-git-tag-version --allow-same-version
+          npm --prefix tools/cc-sdd version "${{ steps.version.outputs.version }}" --no-git-tag-version --allow-same-version
+
+      - name: Build plugin
+        run: npm run build:plugin
+        working-directory: tools/cc-sdd
+
+      - name: Test
+        run: npm test
+        working-directory: tools/cc-sdd
+
+      - name: Prepare release branch tree
+        if: github.event_name == 'push'
+        shell: bash
+        run: |
+          set -euo pipefail
+          PUBLIC_REPOSITORY="${{ vars.PUBLIC_REPOSITORY }}"
+          if [[ -z "$PUBLIC_REPOSITORY" ]]; then
+            PUBLIC_REPOSITORY="compass-sdd/compass"
+          fi
+          PUBLIC_HOMEPAGE="https://github.com/${PUBLIC_REPOSITORY}"
+          RELEASE_DIR="${RUNNER_TEMP}/plugin-release"
+          rm -rf "$RELEASE_DIR"
+          mkdir -p "$RELEASE_DIR/.claude-plugin"
+          cp -R plugin "$RELEASE_DIR/plugin"
+
+          cat > "$RELEASE_DIR/.claude-plugin/marketplace.json" <<JSON
+          {
+            "\$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+            "name": "kiro-compass",
+            "description": "Kiro Compass marketplace for practical spec-driven development in Claude Code.",
+            "owner": {
+              "name": "Compass Maintainers"
+            },
+            "plugins": [
+              {
+                "name": "kiro",
+                "description": "Kiro workflow for Compass spec-driven development in Claude Code.",
+                "category": "development",
+                "source": "./plugin",
+                "homepage": "${PUBLIC_HOMEPAGE}"
+              }
+            ]
+          }
+          JSON
+
+          cat > "$RELEASE_DIR/README.md" <<EOF
+          # Compass Plugin Release
+
+          This branch is generated from the source branch by CI.
+
+          Add this branch as the Claude Code marketplace source, then install `kiro@kiro-compass`.
+
+          Do not open pull requests against this branch. Contribute source changes to `main`.
+          EOF
+
+          cat > "$RELEASE_DIR/PROVENANCE.json" <<JSON
+          {
+            "public_repository": "${PUBLIC_REPOSITORY}",
+            "source_branch": "${GITHUB_REF_NAME}",
+            "source_commit": "${GITHUB_SHA}",
+            "workflow": "${GITHUB_WORKFLOW}",
+            "run_id": "${GITHUB_RUN_ID}",
+            "run_number": "${GITHUB_RUN_NUMBER}",
+            "run_attempt": "${GITHUB_RUN_ATTEMPT}",
+            "plugin_version": "${{ steps.version.outputs.version }}"
+          }
+          JSON
+
+      - name: Publish release branch
+        if: github.event_name == 'push'
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          RELEASE_DIR="${RUNNER_TEMP}/plugin-release"
+          cd "$RELEASE_DIR"
+          git init
+          git checkout -b release
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Build plugin v${{ steps.version.outputs.version }}"
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push --force origin HEAD:release
+          git tag -a "plugin-v${{ steps.version.outputs.version }}" -m "Plugin v${{ steps.version.outputs.version }}"
+          git push origin "plugin-v${{ steps.version.outputs.version }}"

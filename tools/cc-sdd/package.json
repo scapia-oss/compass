@@ -1,0 +1,16 @@
+{
+  "name": "compass",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Compass: Claude Code plugin for practical spec-driven development.",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "build:plugin": "node ./scripts/build-plugin.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^25.1.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.7"
+  }
+}

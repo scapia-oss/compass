@@ -1,0 +1,303 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/compass-sdd/compass/spec.schema.json",
+  "title": "kiro spec.json",
+  "description": "De-facto schema for .kiro/specs/**/spec.json. Lenient by design: older specs omit spec_type/workflow/artifacts and default to feature/requirements-first/all-enabled. The validator (kiro-gate.mjs validate) enforces the subset that actually governs the lifecycle.",
+  "type": "object",
+  "required": [
+    "feature_name",
+    "approvals"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "feature_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "spec_path": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "updated_at": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string"
+    },
+    "plugin_version": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Kiro plugin version that last stamped this spec (set by stamp-plugin-version.py from plugin.json \u2014 never hand-written, absent on specs never touched by a plugin build that writes it)."
+    },
+    "spec_type": {
+      "enum": [
+        "feature",
+        "bugfix",
+        "tech-debt",
+        "chore"
+      ]
+    },
+    "workflow": {
+      "enum": [
+        "requirements-first",
+        "design-first"
+      ]
+    },
+    "implementation_mode": {
+      "enum": [
+        "standard",
+        "fast"
+      ]
+    },
+    "commit_policy": {
+      "enum": [
+        "per-task",
+        "leave-uncommitted"
+      ]
+    },
+    "required_gates": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "boolean"
+      },
+      "properties": {
+        "design_review": {
+          "type": "boolean"
+        },
+        "impl_validation": {
+          "type": "boolean"
+        },
+        "retrospective": {
+          "type": "boolean"
+        }
+      }
+    },
+    "task_granularity": {
+      "enum": [
+        "milestone"
+      ]
+    },
+    "contracts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "commands_fired": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "sequence",
+          "command",
+          "skill",
+          "phase",
+          "timestamp"
+        ],
+        "properties": {
+          "sequence": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "command": {
+            "type": "string",
+            "minLength": 1
+          },
+          "skill": {
+            "type": "string",
+            "minLength": 1
+          },
+          "phase": {
+            "type": "string",
+            "minLength": 1
+          },
+          "timestamp": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "ready_for_implementation": {
+      "type": "boolean"
+    },
+    "kind": {
+      "enum": [
+        "linked-spec"
+      ]
+    },
+    "role": {
+      "enum": [
+        "satellite",
+        "peer"
+      ]
+    },
+    "affected_repos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "repo",
+          "weight"
+        ],
+        "properties": {
+          "repo": {
+            "type": "string",
+            "minLength": 1
+          },
+          "weight": {
+            "enum": [
+              "light",
+              "heavy"
+            ]
+          },
+          "why": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "branch": {
+      "type": "object",
+      "properties": {
+        "this_repo": {
+          "type": "string"
+        },
+        "parent_repo": {
+          "type": "string"
+        },
+        "parity": {
+          "enum": [
+            "matched",
+            "mismatch",
+            "n-a"
+          ]
+        }
+      }
+    },
+    "phase": {
+      "enum": [
+        "initialized",
+        "requirements-generated",
+        "hld-generated",
+        "lld-generated",
+        "design-generated",
+        "tasks-generated",
+        "linked"
+      ]
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "boolean"
+      },
+      "properties": {
+        "requirements": {
+          "type": "boolean"
+        },
+        "bugfix_analysis": {
+          "type": "boolean"
+        },
+        "brief": {
+          "type": "boolean"
+        },
+        "design_hld": {
+          "type": "boolean"
+        },
+        "design_lld": {
+          "type": "boolean"
+        },
+        "design": {
+          "type": "boolean"
+        },
+        "research": {
+          "type": "boolean"
+        },
+        "gap_analysis": {
+          "type": "boolean"
+        },
+        "design_review": {
+          "type": "boolean"
+        },
+        "impl_validation": {
+          "type": "boolean"
+        },
+        "decisions": {
+          "type": "boolean"
+        },
+        "learnings": {
+          "type": "boolean"
+        },
+        "qa_log": {
+          "type": "boolean"
+        },
+        "tasks": {
+          "type": "boolean"
+        }
+      }
+    },
+    "approvals": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "generated",
+          "approved"
+        ],
+        "properties": {
+          "generated": {
+            "type": "boolean"
+          },
+          "approved": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "A linked-spec must carry a role and phase 'linked'.",
+      "if": {
+        "required": [
+          "kind"
+        ],
+        "properties": {
+          "kind": {
+            "const": "linked-spec"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "role"
+        ],
+        "properties": {
+          "phase": {
+            "const": "linked"
+          }
+        }
+      }
+    },
+    {
+      "$comment": "role only makes sense on a linked-spec.",
+      "if": {
+        "required": [
+          "role"
+        ]
+      },
+      "then": {
+        "required": [
+          "kind"
+        ],
+        "properties": {
+          "kind": {
+            "const": "linked-spec"
+          }
+        }
+      }
+    }
+  ]
+}

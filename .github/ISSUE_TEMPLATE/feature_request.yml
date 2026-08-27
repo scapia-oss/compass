@@ -1,0 +1,52 @@
+name: Feature request
+description: Suggest an improvement to the Compass workflow
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use case
+      description: What workflow or problem would this address? Why is it important?
+      placeholder: "When I'm working on a multi-repo project, I need..."
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How should this work? Describe the ideal behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What workarounds or alternatives have you tried or considered?
+    validations:
+      required: false
+  - type: textarea
+    id: feedback-retro
+    attributes:
+      label: Feedback or retrospective files
+      description: |
+        If this request came from a real workflow session, attach or paste relevant files:
+        - `.kiro/feedback/feedback-<date>.md` — developer journey interview capturing friction points
+        - `.kiro/retrospective/skill-improvements-<date>.md` — skill improvement suggestions
+        These help maintainers understand the real-world context behind the request. Redact anything sensitive.
+    validations:
+      required: false
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Which part of the workflow does this affect?
+      options:
+        - Specification (requirements, design, tasks)
+        - Implementation (/kiro:impl, /kiro:impl-fast)
+        - Review / validation
+        - Steering / project setup
+        - Builder / plugin infrastructure
+        - Documentation
+        - Other
+    validations:
+      required: false

@@ -1,0 +1,15 @@
+{
+  "name": "compass",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Compass: Claude Code plugin for practical spec-driven development.",
+  "type": "module",
+  "scripts": {
+    "build:plugin": "npm --prefix tools/cc-sdd run build:plugin",
+    "test": "npm --prefix tools/cc-sdd test",
+    "ci": "npm --prefix tools/cc-sdd ci && npm --prefix tools/cc-sdd run build:plugin && npm --prefix tools/cc-sdd test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

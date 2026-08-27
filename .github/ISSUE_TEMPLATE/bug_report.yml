@@ -1,0 +1,91 @@
+name: Bug report
+description: Report a reproducible problem with the Compass plugin
+title: "[Bug]: "
+labels: [bug, triage]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Describe the bug. What did you expect to happen, and what happened instead?
+      placeholder: "When I run /kiro:impl, I expected X but got Y..."
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Minimal steps, commands, or repository shape needed to reproduce the issue.
+      placeholder: |
+        1. Run `/kiro:spec-init "my feature"`
+        2. Run `/kiro:spec-requirements my-feature`
+        3. See error...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should have happened?
+    validations:
+      required: false
+  - type: input
+    id: version
+    attributes:
+      label: Plugin version
+      description: Run `/kiro:doctor` or check the version marker file in your spec directory.
+      placeholder: "e.g. 0.13.1"
+    validations:
+      required: false
+  - type: input
+    id: claude-code-version
+    attributes:
+      label: Claude Code version
+      description: Run `claude --version` in your terminal.
+      placeholder: "e.g. 1.0.30"
+    validations:
+      required: false
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - macOS
+        - Linux
+        - Windows (WSL)
+        - Other
+    validations:
+      required: false
+  - type: textarea
+    id: spec-artifacts
+    attributes:
+      label: Spec artifacts
+      description: |
+        If the bug occurred during a spec workflow, paste the contents of these files from your spec directory (`.kiro/specs/<your-feature>/`):
+        - `spec.json` — spec metadata and phase status
+        - `tasks.md` — task list with completion markers (if bug is during implementation)
+        Redact any sensitive business logic before pasting.
+      render: json
+    validations:
+      required: false
+  - type: textarea
+    id: feedback-retro
+    attributes:
+      label: Feedback or retrospective files
+      description: |
+        If you ran `/kiro:retrospective` or the feedback-capture hook produced output, attach or paste:
+        - `.kiro/feedback/feedback-<date>.md` — developer journey interview capturing what went wrong
+        - `.kiro/retrospective/skill-improvements-<date>.md` — skill improvement suggestions
+        - `.kiro/learnings/patterns.md` — if the bug relates to a learned pattern
+
+        These files give maintainers the richest signal about what broke and why. Redact anything sensitive.
+    validations:
+      required: false
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Paste any error messages or relevant terminal output.
+      render: shell
+    validations:
+      required: false
