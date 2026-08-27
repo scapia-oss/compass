@@ -205,11 +205,13 @@ const pages = [
       <section class="section">
         <h2>5. Validation Gates Catch Drift Before It Ships</h2>
         <p>AI implementations can be flaky. Tests pass but the code doesn't match the spec. A design assumption gets silently dropped. A boundary stated in requirements is ignored in implementation.</p>
-        <p>Compass has three layers of validation:</p>
+        <p>Compass validates at every phase — not just at the end:</p>
         <ul>
+          <li><strong>Design validation</strong> (<a href="#gates"><code>/kiro:validate-design</code></a>): runs the <a href="https://github.com/scapia-oss/compass/blob/main/tools/cc-sdd/templates/shared/settings/rules/architect-critique-loop.md">architect-critique loop</a> — stress-tests HLD or LLD with pointed questions about edge cases, failure modes, and blast radius before implementation starts.</li>
+          <li><strong>Gap analysis</strong> (<a href="#gates"><code>/kiro:validate-gap</code></a>): analyzes the gap between requirements and the existing codebase. Finds what exists, what's missing, and what conflicts — before design makes assumptions about a blank slate.</li>
           <li><strong>Per-task review</strong> (<a href="#review"><code>/kiro:review</code></a>): checks each task against its spec boundaries and catches security, correctness, and scope issues.</li>
-          <li><strong>Feature-level validation</strong> (<a href="#validate-impl"><code>/kiro:validate-impl</code></a>): cross-checks all tasks together, runs the full test suite, verifies the spec's acceptance criteria end-to-end.</li>
-          <li><strong>Completion gate</strong> (<a href="#kiro-next"><code>/kiro:verify-completion</code></a>): requires fresh build/test evidence before "done." Self-reported status is never trusted alone.</li>
+          <li><strong>Feature-level validation</strong> (<a href="#gates"><code>/kiro:validate-impl</code></a>): cross-checks all tasks together, runs the full test suite, verifies the spec's acceptance criteria end-to-end.</li>
+          <li><strong>Completion gate</strong> (<a href="#gates"><code>/kiro:verify-completion</code></a>): requires fresh build/test evidence before "done." Self-reported status is never trusted alone.</li>
         </ul>
         <div class="callout"><a href="#gates">How gates work →</a></div>
       </section>
