@@ -164,7 +164,7 @@ const pages = [
       <section class="section">
         <h1>Quick Install</h1>
         <p>Install the generated release branch as a Claude Code marketplace source, then verify the plugin.</p>
-        <pre><code>/plugin marketplace add scapia/compass@release
+        <pre><code>/plugin marketplace add scapia-oss/compass@release
 /plugin install kiro@kiro-compass
 /reload-plugins
 /kiro:doctor</code></pre>
@@ -244,7 +244,7 @@ const pages = [
       <section class="section">
         <h1>Cheat Sheet</h1>
         <h2>Install</h2>
-        <pre><code>/plugin marketplace add scapia/compass@release
+        <pre><code>/plugin marketplace add scapia-oss/compass@release
 /plugin install kiro@kiro-compass
 /reload-plugins
 /kiro:doctor</code></pre>
@@ -1429,7 +1429,7 @@ const operatePages = [
           <li>Run <code>/plugin install kiro@kiro-compass</code>.</li>
           <li>Run <code>/reload-plugins</code> and <code>/kiro:doctor</code>.</li>
         </ol>
-        <pre><code>/plugin marketplace add scapia/compass@release
+        <pre><code>/plugin marketplace add scapia-oss/compass@release
 /plugin install kiro@kiro-compass
 /reload-plugins
 /kiro:doctor</code></pre>
