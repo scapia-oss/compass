@@ -41,6 +41,18 @@ const pages = [
         </div>
       </section>
       <section class="section">
+        <h2>What Sets Compass Apart</h2>
+        <div class="grid two">
+          <div class="card"><h3>Learnings compound</h3><p>When you correct the AI, the correction is recorded, promoted to a global pattern, and loaded into every future spec. Your fix today helps the next feature — and the next teammate. <a href="#learning-loop">How it works →</a></p></div>
+          <div class="card"><h3>Design splits into HLD and LLD</h3><p>High-level design (architecture, flows) comes first — cheap to iterate. Low-level design (interfaces, contracts) only after HLD is approved. No tokens wasted on detailed specs for an architecture that's going to change.</p></div>
+          <div class="card"><h3>Discovery surfaces unknowns</h3><p><code>/kiro:discovery</code> is a deep codebase exploration and Q&amp;A loop. It finds the unknowns in your approach — what exists, what's adjacent, what breaks — before routing to the right workflow.</p></div>
+          <div class="card"><h3>Triage decides depth</h3><p>Engineers misjudge scope. Compass classifies automatically: no spec, minimal spec (one model turn), or full spec. A "quick fix" that's actually cross-cutting gets the right treatment.</p></div>
+          <div class="card"><h3>Validation catches drift</h3><p>AI implementations can be flaky — tests pass but the code doesn't match the spec. Validation gates require fresh evidence and cross-check against the spec. Self-reported "done" is never trusted.</p></div>
+          <div class="card"><h3>Idea to HLD in minutes</h3><p>Discovery scopes the work, requirements capture intent, the architect-critique loop produces a reviewed HLD. All grounded in your actual codebase, not generic advice.</p></div>
+          <div class="card"><h3>Self-navigating workflow</h3><p><code>/kiro:next</code> reads your spec state and prints the exact next command. No memorizing the 24-command list. The workflow tells you where you are.</p></div>
+        </div>
+      </section>
+      <section class="section">
         <h2>The Core Loop</h2>
         <div class="flow">
           <div class="flow-step"><strong>1. Orient</strong><code>/kiro:doctor</code><br><code>/kiro:steering</code></div>
